@@ -55,13 +55,13 @@ public class DataInit implements ApplicationRunner {
             switch (type) {
                 case EMPLOYEES:
                     while ((line = bufferedReader.readLine()) != null) {
-                        parseUserLine(line, pointer);
+                        employeeRepository.save(parseEmployeeLine(line,pointer));
                         pointer++;
                     }
                     break;
                 case TASKS:
                     while ((line = bufferedReader.readLine()) != null) {
-                        parseTaskLine(line, pointer);
+                        taskRepository.save(parseTaskLine(line, pointer));
                         pointer++;
                     }
                     break;
@@ -69,7 +69,7 @@ public class DataInit implements ApplicationRunner {
         }
     }
 
-    private void parseUserLine(String line, int pointer) throws IllegalArgumentException {
+    private Employee parseEmployeeLine(String line, int pointer) throws IllegalArgumentException {
         String[] lineParts = line.split(",");
         if (lineParts.length != 2 || lineParts[1].trim().length() == 0) {
             throw new DataLoadingException("Wrong data: user data storage, line " + pointer + " : " + line);
@@ -83,10 +83,10 @@ public class DataInit implements ApplicationRunner {
         Employee employee = new Employee();
         employee.setId(userId);
         employee.setName(lineParts[1].trim());
-        employeeRepository.save(employee);
+        return employee;
     }
 
-    private void parseTaskLine(String line, int pointer) {
+    public Task parseTaskLine(String line, int pointer) {
         String[] lineParts = line.split(",");
         if (lineParts.length < 5 || lineParts.length > 6 || lineParts[1].trim().length() == 0 || lineParts[2].trim().length() == 0) {
             throw new DataLoadingException("Wrong data: task data storage, line " + pointer + " : " + line);
@@ -110,7 +110,7 @@ public class DataInit implements ApplicationRunner {
         Task.Status status = Task.Status.NEW;
         if (lineParts.length == 6) status = getStatus(lineParts[5], pointer, line);
 
-        taskRepository.save(new Task(taskId, lineParts[1].trim(), lineParts[2].trim(), deadLine, employee, status));
+        return new Task(taskId, lineParts[1].trim(), lineParts[2].trim(), deadLine, employee, status);
     }
 
     private static Long parseId(String idStr, int pointer, String line) {

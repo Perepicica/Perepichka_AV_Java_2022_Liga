@@ -33,7 +33,7 @@ public class Controller {
         String args = requestParts[1];
         switch (requestParts[0]) {
             case "getEmployeeTasks" : return employeeService.getEmployeeTasks(args);
-            case "addTask" : taskService.addTask(args);
+            case "addTask" : return taskService.addTask(args);
             case "getTask" : taskService.getTask(args);
             case "updateTask" : taskService.updateTask(args);
             case "deleteTask" : taskService.deleteTask(args);
