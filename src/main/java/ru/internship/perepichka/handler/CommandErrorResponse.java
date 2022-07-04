@@ -12,5 +12,4 @@ import lombok.Setter;
 public class CommandErrorResponse {
     private int status;
     private String message;
-    private Long timeStamp;
 }

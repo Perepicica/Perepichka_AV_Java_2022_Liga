@@ -1,5 +1,6 @@
 package ru.internship.perepichka.entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import lombok.Getter;
@@ -25,6 +26,7 @@ public class Employee {
     @OneToMany(mappedBy = "employee",
             cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH},
             fetch = FetchType.EAGER)
+    @JsonManagedReference
     private List<Task> tasks;
 
 }
