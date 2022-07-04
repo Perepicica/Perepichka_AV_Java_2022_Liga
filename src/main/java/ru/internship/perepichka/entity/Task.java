@@ -1,5 +1,6 @@
 package ru.internship.perepichka.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -29,6 +30,7 @@ public class Task {
 
     @ManyToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
     @JoinColumn(name = "employee_id", nullable = false)
+    @JsonBackReference
     private Employee employee;
 
     @Enumerated(EnumType.STRING)
