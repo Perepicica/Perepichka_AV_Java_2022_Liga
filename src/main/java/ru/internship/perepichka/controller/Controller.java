@@ -29,15 +29,15 @@ public class Controller {
         }
 
         String args = requestParts[1];
-        switch (requestParts[0]) {
-            case "getEmployeeTasks" : return employeeService.getEmployeeTasksString(args);
-            case "addTask" : return taskService.addTask(args);
-            case "getTask" : return taskService.getTaskString(args);
-            case "updateTask" : return taskService.updateTask(args);
-            case "deleteTask" : return taskService.deleteTask(args);
-            case "deleteAll" : employeeService.deleteUsers();
-            default : throw new BadCommandException("No such command");
-        }
+        return switch (requestParts[0]) {
+            case "getEmployeeTasks" -> employeeService.getEmployeeTasksString(args);
+            case "addTask" -> taskService.addTask(args);
+            case "getTask" -> taskService.getTaskString(args);
+            case "updateTask" -> taskService.updateTask(args);
+            case "deleteTask" -> taskService.deleteTask(args);
+            case "deleteAll" -> employeeService.deleteUsers();
+            default -> throw new BadCommandException("No such command");
+        };
     }
 
 }

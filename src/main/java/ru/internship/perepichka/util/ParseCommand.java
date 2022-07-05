@@ -6,7 +6,7 @@ public class ParseCommand {
 
     private ParseCommand(){}
 
-    private static final String UPDATE_COMMAND_ERROR = "Wrong format for update, try updateTas:taskId,fieldName=newValue";
+    private static final String UPDATE_COMMAND_ERROR = "Wrong format for update, try updateTask:taskId,fieldName=newValue";
     public static String[] parseUpdateCommand(String args) {
         String[] result = new String[3];
         String[] idAndField = args.split(",");
@@ -27,8 +27,8 @@ public class ParseCommand {
     }
 
     private static boolean checkCommandParts(String[] parts) {
-        for (int i = 0; i < parts.length; i++) {
-            if (parts[i].trim().length() == 0) {
+        for (String part : parts) {
+            if (part.trim().length() == 0) {
                 return false;
             }
         }
