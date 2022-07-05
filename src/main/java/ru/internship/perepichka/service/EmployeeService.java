@@ -7,6 +7,7 @@ import ru.internship.perepichka.entity.Employee;
 import ru.internship.perepichka.entity.Task;
 import ru.internship.perepichka.exception.BadCommandException;
 import ru.internship.perepichka.exception.BadIdException;
+import ru.internship.perepichka.util.ParseData;
 
 import java.util.List;
 import java.util.Optional;
@@ -22,14 +23,9 @@ public class EmployeeService {
 
 
     public List<Task> getEmployeeTasks(String args) {
-        long id;
-        try {
-            id = Long.parseLong(args);
-        } catch (NumberFormatException ex) {
-            throw new BadCommandException("User id should be long type");
-        }
-
+        long id = ParseData.parseId(new BadCommandException(""), args);
         Optional<Employee> optionalEmployee = employeeRepository.findById(id);
+
         if (optionalEmployee.isPresent()) {
             return optionalEmployee.get().getTasks();
         } else {
@@ -39,6 +35,10 @@ public class EmployeeService {
 
     public void deleteUsers() {
         throw new UnsupportedOperationException();
+    }
+
+    public Employee getReferenceById(long id) {
+        return employeeRepository.getReferenceById(id);
     }
 
 }
