@@ -21,6 +21,14 @@ public class EmployeeService {
         this.employeeRepository = employeeRepository;
     }
 
+    public String getEmployeeTasksString(String args) {
+        List<Task> tasks = getEmployeeTasks(args);
+        StringBuilder builder = new StringBuilder();
+        for (Task task : tasks){
+            builder.append(task.toString());
+        }
+        return builder.toString();
+    }
 
     public List<Task> getEmployeeTasks(String args) {
         long id = ParseData.parseId(new BadCommandException(""), args);

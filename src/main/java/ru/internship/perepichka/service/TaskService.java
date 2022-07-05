@@ -8,7 +8,6 @@ import ru.internship.perepichka.exception.BadCommandException;
 import ru.internship.perepichka.exception.BadIdException;
 import ru.internship.perepichka.util.ParseData;
 
-import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -23,18 +22,18 @@ public class TaskService {
         this.employeeService = employeeService;
     }
 
-    public List<Task> addTask(String args) {
+    public String addTask(String args) {
         Task task = ParseData.parseTaskLine(new BadCommandException(""), args);
         task.setEmployee(employeeService.getReferenceById(task.getEmployee().getId()));
         taskRepository.save(task);
-        return employeeService.getEmployeeTasks(args.split(",")[3]);
+        return "Done!";
     }
 
-    public List<Task> getTask(String args) {
+    public String getTask(String args) {
         long id = ParseData.parseId(new BadCommandException(""), args);
         Optional<Task> optionalTask = taskRepository.findById(id);
         if (optionalTask.isPresent()) {
-            return List.of(optionalTask.get());
+            return optionalTask.get().toString();
         } else {
             throw new BadIdException("No task with id " + id);
         }

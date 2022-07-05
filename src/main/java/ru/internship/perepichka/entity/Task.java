@@ -36,6 +36,16 @@ public class Task {
     @Enumerated(EnumType.STRING)
     private Status status;
 
+    @Override
+    public String toString() {
+        return  "id=" + id +
+                ", header=" + header +
+                ", description=" + description +
+                ", deadline=" + deadline +
+                ", employee=" + employee.getName() +
+                ", status=" + status +"\n";
+    }
+
     public enum Status {
         NEW, IN_PROGRESS, DONE
     }
