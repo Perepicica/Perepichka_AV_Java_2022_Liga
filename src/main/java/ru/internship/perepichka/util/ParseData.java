@@ -12,6 +12,8 @@ import java.util.Date;
 
 public class ParseData {
 
+    private ParseData(){}
+
     public static long parseId(Exception exc, String... args) {
         try {
             return Long.parseLong(args[0].trim());
@@ -46,19 +48,24 @@ public class ParseData {
         return new Task(taskId, header, description, deadLine, new Employee(userId, "unknown"), status);
     }
 
-    private static Task.Status getStatus(Exception exc, String[] lineParts, String line) {
-        Task.Status status = Task.Status.NEW;
+    public static Task.Status getStatus(Exception exc, String[] lineParts, String line) {
         if (lineParts.length == 6) {
-            for (Task.Status st : Task.Status.values()) {
-                if (st.name().equals(lineParts[5])) return st;
-            }
-            throwError(exc, "Wrong task status: Data storage, line : " + line,
-                    "Wrong task status, options: NEW, IN_PROGRESS, DONE");
+            return getStatusType(exc, lineParts[5], line);
         }
-        return status;
+        return Task.Status.NEW;
     }
 
-    private static Date getDeadLine(Exception exc, String date, String line) {
+    public static Task.Status getStatusType(Exception exc, String status, String line) {
+        Task.Status result = Task.Status.NEW;
+        for (Task.Status st : Task.Status.values()) {
+            if (st.name().equals(status)) return st;
+        }
+        throwError(exc, "Wrong task status: Data storage, line : " + line,
+                "Wrong task status, options: NEW, IN_PROGRESS, DONE");
+        return result;
+    }
+
+    public static Date getDeadLine(Exception exc, String date, String line) {
         DateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
         try {
             return dateFormat.parse(date.trim());
@@ -77,7 +84,7 @@ public class ParseData {
 
     private static void checkTaskLineFormat(Exception exc, String[] lineParts, String line) {
         if (lineParts.length < 5 || lineParts.length > 6 || lineParts[1].trim().length() == 0 || lineParts[2].trim().length() == 0) {
-            throwError(exc,"Wrong data: Task data storage, line: "+line,
+            throwError(exc, "Wrong data: Task data storage, line: " + line,
                     "Wrong data: Follow the pattern taskId,header,userId,deadLine,status(?)");
         }
     }
