@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -28,5 +29,11 @@ public class Employee {
             fetch = FetchType.EAGER)
     @JsonManagedReference
     private List<Task> tasks;
+
+    public Employee(long id, String name){
+        this.id = id;
+        this.name = name;
+        this.tasks = new ArrayList<>();
+    }
 
 }
