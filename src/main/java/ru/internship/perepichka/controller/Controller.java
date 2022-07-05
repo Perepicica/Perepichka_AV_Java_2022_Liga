@@ -4,12 +4,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
-import ru.internship.perepichka.entity.Task;
 import ru.internship.perepichka.exception.BadCommandException;
 import ru.internship.perepichka.service.EmployeeService;
 import ru.internship.perepichka.service.TaskService;
 
-import java.util.List;
 
 @RestController
 public class Controller {
@@ -24,7 +22,7 @@ public class Controller {
     }
 
     @GetMapping("api/{command}")
-    public List<Task> processCommand(@PathVariable String command) {
+    public String processCommand(@PathVariable String command) {
         String[] requestParts = command.split(":");
         if (requestParts.length != 2) {
             throw new BadCommandException("Follow the command pattern command:arg1,arg2...");
@@ -32,7 +30,7 @@ public class Controller {
 
         String args = requestParts[1];
         switch (requestParts[0]) {
-            case "getEmployeeTasks" : return employeeService.getEmployeeTasks(args);
+            case "getEmployeeTasks" : return employeeService.getEmployeeTasksString(args);
             case "addTask" : return taskService.addTask(args);
             case "getTask" : return taskService.getTask(args);
             case "updateTask" : taskService.updateTask(args);
