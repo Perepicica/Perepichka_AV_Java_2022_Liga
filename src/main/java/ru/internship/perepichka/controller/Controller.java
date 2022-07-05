@@ -32,9 +32,9 @@ public class Controller {
         switch (requestParts[0]) {
             case "getEmployeeTasks" : return employeeService.getEmployeeTasksString(args);
             case "addTask" : return taskService.addTask(args);
-            case "getTask" : return taskService.getTask(args);
-            case "updateTask" : taskService.updateTask(args);
-            case "deleteTask" : taskService.deleteTask(args);
+            case "getTask" : return taskService.getTaskString(args);
+            case "updateTask" : return taskService.updateTask(args);
+            case "deleteTask" : return taskService.deleteTask(args);
             case "deleteAll" : employeeService.deleteUsers();
             default : throw new BadCommandException("No such command");
         }
