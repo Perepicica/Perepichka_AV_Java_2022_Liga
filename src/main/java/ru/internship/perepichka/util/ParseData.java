@@ -18,10 +18,12 @@ public class ParseData {
         try {
             return Long.parseLong(args[0].trim());
         } catch (NumberFormatException e) {
-            throwError(exc, "Wrong id: Id should be long type, line : " + args[1],
-                    "Id should be long type");
+            if (exc instanceof DataLoadingException) {
+                throw new DataLoadingException("Wrong id: Id should be long type, line : " + args[1]);
+            } else {
+                throw new BadCommandException("Id should be long type");
+            }
         }
-        return 0L;
     }
 
     public static Employee parseEmployeeLine(Exception exc, String line) {
@@ -71,7 +73,7 @@ public class ParseData {
             return dateFormat.parse(date.trim());
         } catch (ParseException exception) {
             throwError(exc, "Wrong data: Task data storage, line : " + line,
-                    "Wrong data: Follow date pattern: " + dateFormat.toString());
+                    "Wrong data: Follow date pattern: " + dateFormat);
         }
         return new Date();
     }
@@ -85,7 +87,7 @@ public class ParseData {
     private static void checkTaskLineFormat(Exception exc, String[] lineParts, String line) {
         if (lineParts.length < 5 || lineParts.length > 6 || lineParts[1].trim().length() == 0 || lineParts[2].trim().length() == 0) {
             throwError(exc, "Wrong data: Task data storage, line: " + line,
-                    "Wrong data: Follow the pattern taskId,header,userId,deadLine,status(?)");
+                    "Wrong data: Follow the pattern taskId,header,description,userId,deadLine,status(?)");
         }
     }
 

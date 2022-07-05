@@ -19,14 +19,13 @@ import java.util.List;
 public class Employee {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String name;
 
     @OneToMany(mappedBy = "employee",
-            cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH},
-            fetch = FetchType.EAGER)
+            cascade = CascadeType.ALL,
+            fetch = FetchType.LAZY)
     @JsonManagedReference
     private List<Task> tasks;
 

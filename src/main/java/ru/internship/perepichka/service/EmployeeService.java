@@ -32,7 +32,7 @@ public class EmployeeService {
 
     public List<Task> getEmployeeTasks(String args) {
         long id = ParseData.parseId(new BadCommandException(""), args);
-        Optional<Employee> optionalEmployee = employeeRepository.findById(id);
+        Optional<Employee> optionalEmployee = findById(id);
 
         if (optionalEmployee.isPresent()) {
             return optionalEmployee.get().getTasks();
@@ -41,12 +41,17 @@ public class EmployeeService {
         }
     }
 
-    public void deleteUsers() {
-        throw new UnsupportedOperationException();
+    public String deleteUsers() {
+        employeeRepository.deleteAll();
+        return "All data was deleted successfully";
     }
 
     public Employee getReferenceById(long id) {
         return employeeRepository.getReferenceById(id);
+    }
+
+    public Optional<Employee> findById(long id){
+        return employeeRepository.findById(id);
     }
 
 }
