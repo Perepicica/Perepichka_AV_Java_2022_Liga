@@ -1,6 +1,6 @@
 package ru.internship.perepichka.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
@@ -10,16 +10,11 @@ import ru.internship.perepichka.service.TaskService;
 
 
 @RestController
+@RequiredArgsConstructor
 public class Controller {
 
     private final EmployeeService employeeService;
     private final TaskService taskService;
-
-    @Autowired
-    public Controller(EmployeeService employeeService, TaskService taskService) {
-        this.employeeService = employeeService;
-        this.taskService = taskService;
-    }
 
     @GetMapping("api/{command}")
     public String processCommand(@PathVariable String command) {
