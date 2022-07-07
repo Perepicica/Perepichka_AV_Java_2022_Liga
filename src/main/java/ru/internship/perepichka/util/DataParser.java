@@ -1,5 +1,6 @@
 package ru.internship.perepichka.util;
 
+import lombok.experimental.UtilityClass;
 import ru.internship.perepichka.entity.Employee;
 import ru.internship.perepichka.entity.Task;
 import ru.internship.perepichka.exception.BadCommandException;
@@ -10,9 +11,8 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class ParseData {
-
-    private ParseData(){}
+@UtilityClass
+public class DataParser {
 
     public static long parseId(Exception exc, String... args) {
         try {

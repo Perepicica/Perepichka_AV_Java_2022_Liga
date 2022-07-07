@@ -14,3 +14,6 @@ spring:
     properties:
       hibernate:
         dialect: org.hibernate.dialect.H2Dialect
+file:
+  employees: src/main/resources/employeeData.csv
+  tasks: src/main/resources/taskData.csv

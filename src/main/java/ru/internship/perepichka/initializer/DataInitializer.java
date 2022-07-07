@@ -1,39 +1,33 @@
-package ru.internship.perepichka.init;
+package ru.internship.perepichka.initializer;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.ApplicationArguments;
-import org.springframework.boot.ApplicationRunner;
 import org.springframework.stereotype.Component;
 import ru.internship.perepichka.dao.EmployeeRepository;
 import ru.internship.perepichka.dao.TaskRepository;
 import ru.internship.perepichka.entity.Task;
 import ru.internship.perepichka.exception.DataLoadingException;
-import ru.internship.perepichka.util.ParseData;
+import ru.internship.perepichka.util.DataParser;
 
+import javax.annotation.PostConstruct;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 
 @Component
-public class DataInit implements ApplicationRunner {
+@RequiredArgsConstructor
+public class DataInitializer {
     private final EmployeeRepository employeeRepository;
     private final TaskRepository taskRepository;
 
-    @Value("${employeeData}")
+    @Value("${file.employees}")
     private String employeeDataFile;
-    @Value("${taskData}")
+    @Value("${file.tasks}")
     private String taskDataFile;
 
-    @Autowired
-    public DataInit(EmployeeRepository employeeRepository, TaskRepository taskRepository) {
-        this.employeeRepository = employeeRepository;
-        this.taskRepository = taskRepository;
-    }
-
-    @Override
-    public void run(ApplicationArguments args) throws Exception {
+    @PostConstruct
+    public void loadData() throws IOException {
         if (employeeRepository.count() == 0) {
             csvDataLoader(employeeDataFile, FileType.EMPLOYEES);
             csvDataLoader(taskDataFile, FileType.TASKS);
@@ -56,14 +50,14 @@ public class DataInit implements ApplicationRunner {
     private void saveEmployees(BufferedReader bufferedReader) throws IOException {
         String line;
         while ((line = bufferedReader.readLine()) != null) {
-            employeeRepository.save(ParseData.parseEmployeeLine(new DataLoadingException(""), line));
+            employeeRepository.save(DataParser.parseEmployeeLine(new DataLoadingException(""), line));
         }
     }
 
     private void saveTasks(BufferedReader bufferedReader) throws IOException {
         String line;
         while ((line = bufferedReader.readLine()) != null) {
-            Task task = ParseData.parseTaskLine(new DataLoadingException(""), line);
+            Task task = DataParser.parseTaskLine(new DataLoadingException(""), line);
             task.setEmployee(employeeRepository.getReferenceById(task.getEmployee().getId()));
             taskRepository.save(task);
         }
