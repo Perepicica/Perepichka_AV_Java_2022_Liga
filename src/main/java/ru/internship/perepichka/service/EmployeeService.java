@@ -20,15 +20,15 @@ public class EmployeeService {
     public String getEmployeeTasksString(String args) {
         List<Task> tasks = getEmployeeTasks(args);
         StringBuilder builder = new StringBuilder();
-        for (Task task : tasks){
+        for (Task task : tasks) {
             builder.append(task.toString());
         }
         return builder.toString();
     }
 
-    public List<Task> getEmployeeTasks(String args) {
+    private List<Task> getEmployeeTasks(String args) {
         long id = DataParser.parseId(new BadCommandException(""), args);
-        Optional<Employee> optionalEmployee = findById(id);
+        Optional<Employee> optionalEmployee = employeeRepository.findById(id);
 
         if (optionalEmployee.isPresent()) {
             return optionalEmployee.get().getTasks();
@@ -46,8 +46,8 @@ public class EmployeeService {
         return employeeRepository.getReferenceById(id);
     }
 
-    public Optional<Employee> findById(long id){
-        return employeeRepository.findById(id);
+    public boolean existsById(long id) {
+        return employeeRepository.existsById(id);
     }
 
 }
