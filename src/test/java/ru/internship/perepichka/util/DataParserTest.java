@@ -3,16 +3,21 @@ package ru.internship.perepichka.util;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
+import ru.internship.perepichka.entity.Employee;
 import ru.internship.perepichka.entity.Task;
 import ru.internship.perepichka.exception.BadIdException;
+import ru.internship.perepichka.exception.DataLoadingException;
+import ru.internship.perepichka.initializer.DataInitializer;
 import ru.internship.perepichka.service.TaskService;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 
 class DataParserTest {
 
     Exception exceptionTypeFromTaskService = TaskService.exceptionType.apply("");
+    Exception exceptionTypeFromDataInitializer = DataInitializer.exceptionType.apply("");
 
 
     @Nested
@@ -71,15 +76,35 @@ class DataParserTest {
                 "1,header,description,1,25.05.2022,DoNe"})
         void validStatus_ReturnTask(String taskLine) {
             Task task = DataParser.parseTaskLine(exceptionTypeFromTaskService, taskLine);
-            Assertions.assertEquals(Task.Status.DONE, task.getStatus());
+            assertEquals(Task.Status.DONE, task.getStatus());
         }
 
         @Test
         void nonSpecifiedStatus_ReturnTaskWithNewStatus() {
             String taskLine = "1,header,description,1,25.05.2022";
             Task newTask = DataParser.parseTaskLine(exceptionTypeFromTaskService, taskLine);
-            Assertions.assertEquals(Task.Status.NEW, newTask.getStatus());
+            assertEquals(Task.Status.NEW, newTask.getStatus());
         }
     }
 
+    @Nested
+    @DisplayName("Employee Data parser testing")
+    class parseEmployeeLineTest {
+
+        @ParameterizedTest
+        @ValueSource(strings = {
+                "name",
+                "1,",
+                "1,name,somethingAdditional"})
+        void wrongFormat_ExceptionThrown(String employeeLine) {
+            assertThrows(DataLoadingException.class, () -> DataParser.parseEmployeeLine(exceptionTypeFromDataInitializer, employeeLine));
+        }
+
+        @Test
+        void successfulEmployeeLineParsing() {
+            Employee employee = DataParser.parseEmployeeLine(exceptionTypeFromDataInitializer, "1,name");
+            assertEquals(1, employee.getId());
+            assertEquals("name", employee.getName());
+        }
+    }
 }
