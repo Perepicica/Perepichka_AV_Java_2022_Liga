@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
-import java.util.Date;
+import java.time.LocalDate;
 
 @Getter
 @Setter
@@ -24,8 +24,8 @@ public class Task {
 
     private String description;
 
-    @Temporal(TemporalType.DATE)
-    private Date deadline;
+    @Column(columnDefinition = "Date")
+    private LocalDate deadline;
 
     @ManyToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
     @JoinColumn(name = "employee_id", nullable = false)
@@ -37,12 +37,12 @@ public class Task {
 
     @Override
     public String toString() {
-        return  "id=" + id +
+        return "id=" + id +
                 ", header=" + header +
                 ", description=" + description +
                 ", deadline=" + deadline +
                 ", employee=" + employee.getName() +
-                ", status=" + status +"\n";
+                ", status=" + status + "\n";
     }
 
     public enum Status {

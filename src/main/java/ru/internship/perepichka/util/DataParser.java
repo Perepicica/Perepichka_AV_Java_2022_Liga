@@ -4,12 +4,12 @@ import lombok.experimental.UtilityClass;
 import ru.internship.perepichka.entity.Employee;
 import ru.internship.perepichka.entity.Task;
 import ru.internship.perepichka.exception.BadCommandException;
+import ru.internship.perepichka.exception.BadIdException;
 import ru.internship.perepichka.exception.DataLoadingException;
 
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 
 @UtilityClass
 public class DataParser {
@@ -21,7 +21,7 @@ public class DataParser {
             if (exc instanceof DataLoadingException) {
                 throw new DataLoadingException("Wrong id: Id should be long type, line : " + args[1]);
             } else {
-                throw new BadCommandException("Id should be long type");
+                throw new BadIdException("Id should be long type");
             }
         }
     }
@@ -44,7 +44,7 @@ public class DataParser {
         String header = lineParts[1].trim();
         String description = lineParts[2].trim();
         long userId = parseId(exc, lineParts[3], line);
-        Date deadLine = getDeadLine(exc, lineParts[4], line);
+        LocalDate deadLine = getDeadLine(exc, lineParts[4], line);
         Task.Status status = getStatus(exc, lineParts, line);
 
         return new Task(taskId, header, description, deadLine, new Employee(userId, "unknown"), status);
@@ -60,22 +60,23 @@ public class DataParser {
     public static Task.Status getStatusType(Exception exc, String status, String line) {
         Task.Status result = Task.Status.NEW;
         for (Task.Status st : Task.Status.values()) {
-            if (st.name().equals(status)) return st;
+            if (st.name().equals(status.toUpperCase())) return st;
         }
         throwError(exc, "Wrong task status: Data storage, line : " + line,
                 "Wrong task status, options: NEW, IN_PROGRESS, DONE");
         return result;
     }
 
-    public static Date getDeadLine(Exception exc, String date, String line) {
-        DateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
+    public static LocalDate getDeadLine(Exception exc, String date, String line) {
+        String dateFormat = "d.MM.yyyy";
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(dateFormat);
         try {
-            return dateFormat.parse(date.trim());
-        } catch (ParseException exception) {
+            return LocalDate.parse(date.trim(), formatter);
+        } catch (DateTimeParseException e) {
             throwError(exc, "Wrong data: Task data storage, line : " + line,
                     "Wrong data: Follow date pattern: " + dateFormat);
         }
-        return new Date();
+        return LocalDate.now();
     }
 
     private static void checkEmployeeLineFormat(String line, String[] lineParts) {
