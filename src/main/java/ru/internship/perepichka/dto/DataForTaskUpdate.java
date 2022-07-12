@@ -1,4 +1,4 @@
-package ru.internship.perepichka.util;
+package ru.internship.perepichka.dto;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;

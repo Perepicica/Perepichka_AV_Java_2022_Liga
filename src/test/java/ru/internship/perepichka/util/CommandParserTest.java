@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
+import ru.internship.perepichka.dto.DataForTaskUpdate;
 import ru.internship.perepichka.exception.BadCommandException;
 
 import static org.junit.jupiter.api.Assertions.*;

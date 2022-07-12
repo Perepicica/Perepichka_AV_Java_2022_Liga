@@ -6,7 +6,7 @@ import ru.internship.perepichka.dao.TaskRepository;
 import ru.internship.perepichka.entity.Task;
 import ru.internship.perepichka.exception.BadCommandException;
 import ru.internship.perepichka.exception.BadIdException;
-import ru.internship.perepichka.util.DataForTaskUpdate;
+import ru.internship.perepichka.dto.DataForTaskUpdate;
 import ru.internship.perepichka.util.CommandParser;
 import ru.internship.perepichka.util.DataParser;
 

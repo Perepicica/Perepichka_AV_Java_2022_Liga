@@ -14,9 +14,21 @@ import java.time.format.DateTimeParseException;
 @UtilityClass
 public class DataParser {
 
+    private final int employeeLinePartsCount = 2;
+    private final int taskLinePartsCount = 6;
+
+    private final int idIndex = 0;
+    private final int employeeNameIndex = 1;
+
+    private final int taskHeaderIndex = 1;
+    private final int taskDescIndex = 2;
+    private final int userIdInTaskIndex = 3;
+    private final int taskDeadLineIndex = 4;
+    private final int taskStatusIndex = 5;
+
     public static long parseId(Exception exc, String... args) {
         try {
-            return Long.parseLong(args[0].trim());
+            return Long.parseLong(args[idIndex].trim());
         } catch (NumberFormatException e) {
             if (exc instanceof DataLoadingException) {
                 throw new DataLoadingException("Wrong id: Id should be long type, line : " + args[1]);
@@ -30,8 +42,8 @@ public class DataParser {
         String[] lineParts = line.split(",");
         checkEmployeeLineFormat(line, lineParts);
 
-        long userId = parseId(exc, lineParts[0], line);
-        String name = lineParts[1].trim();
+        long userId = parseId(exc, lineParts[idIndex], line);
+        String name = lineParts[employeeNameIndex].trim();
 
         return new Employee(userId, name);
     }
@@ -40,19 +52,19 @@ public class DataParser {
         String[] lineParts = line.split(",");
         checkTaskLineFormat(exc, lineParts, line);
 
-        long taskId = parseId(exc, lineParts[0], line);
-        String header = lineParts[1].trim();
-        String description = lineParts[2].trim();
-        long userId = parseId(exc, lineParts[3], line);
-        LocalDate deadLine = getDeadLine(exc, lineParts[4], line);
+        long taskId = parseId(exc, lineParts[idIndex], line);
+        String header = lineParts[taskHeaderIndex].trim();
+        String description = lineParts[taskDescIndex].trim();
+        long userId = parseId(exc, lineParts[userIdInTaskIndex], line);
+        LocalDate deadLine = getDeadLine(exc, lineParts[taskDeadLineIndex], line);
         Task.Status status = getStatus(exc, lineParts, line);
 
         return new Task(taskId, header, description, deadLine, new Employee(userId, "unknown"), status);
     }
 
     public static Task.Status getStatus(Exception exc, String[] lineParts, String line) {
-        if (lineParts.length == 6) {
-            return getStatusType(exc, lineParts[5], line);
+        if (lineParts.length == taskLinePartsCount) {
+            return getStatusType(exc, lineParts[taskStatusIndex], line);
         }
         return Task.Status.NEW;
     }
@@ -80,13 +92,16 @@ public class DataParser {
     }
 
     private static void checkEmployeeLineFormat(String line, String[] lineParts) {
-        if (lineParts.length != 2 || lineParts[1].trim().length() == 0) {
+        if (lineParts.length != employeeLinePartsCount || lineParts[employeeNameIndex].trim().length() == 0) {
             throw new DataLoadingException("Wrong data: user data storage, line : " + line);
         }
     }
 
     private static void checkTaskLineFormat(Exception exc, String[] lineParts, String line) {
-        if (lineParts.length < 5 || lineParts.length > 6 || lineParts[1].trim().length() == 0 || lineParts[2].trim().length() == 0) {
+        if (lineParts.length < taskLinePartsCount - 1
+                || lineParts.length > taskLinePartsCount
+                || lineParts[taskHeaderIndex].trim().length() == 0
+                || lineParts[taskDescIndex].trim().length() == 0) {
             throwError(exc, "Wrong data: Task data storage, line: " + line,
                     "Wrong data: Follow the pattern taskId,header,description,userId,deadLine,status(?)");
         }
