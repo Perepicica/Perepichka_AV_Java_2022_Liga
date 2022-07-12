@@ -14,6 +14,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.function.Function;
 
 @Component
 @RequiredArgsConstructor
@@ -25,6 +26,8 @@ public class DataInitializer {
     private String employeeDataFile;
     @Value("${file.tasks}")
     private String taskDataFile;
+
+    public static final Function<String, DataLoadingException> exceptionType = DataLoadingException::new;
 
     @PostConstruct
     public void loadData() throws IOException {
@@ -50,14 +53,14 @@ public class DataInitializer {
     private void saveEmployees(BufferedReader bufferedReader) throws IOException {
         String line;
         while ((line = bufferedReader.readLine()) != null) {
-            employeeRepository.save(DataParser.parseEmployeeLine(new DataLoadingException(""), line));
+            employeeRepository.save(DataParser.parseEmployeeLine(exceptionType.apply(""), line));
         }
     }
 
     private void saveTasks(BufferedReader bufferedReader) throws IOException {
         String line;
         while ((line = bufferedReader.readLine()) != null) {
-            Task task = DataParser.parseTaskLine(new DataLoadingException(""), line);
+            Task task = DataParser.parseTaskLine(exceptionType.apply(""), line);
             task.setEmployee(employeeRepository.getReferenceById(task.getEmployee().getId()));
             taskRepository.save(task);
         }
