@@ -1,25 +1,25 @@
 package ru.internship.perepichka.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDate;
 
-@Getter
-@Setter
+@Builder
+@Entity
 @NoArgsConstructor
 @AllArgsConstructor
-@Entity
+@Getter
+@Setter
 @Table(name = "task")
 public class Task {
 
     @Id
+    @NonNull
     private Long id;
 
+    @NonNull
     private String header;
 
     private String description;
@@ -32,8 +32,9 @@ public class Task {
     @JsonBackReference
     private Employee employee;
 
+    @Builder.Default
     @Enumerated(EnumType.STRING)
-    private Status status;
+    private Status status = Status.NEW;
 
     @Override
     public String toString() {
@@ -41,7 +42,7 @@ public class Task {
                 ", header=" + header +
                 ", description=" + description +
                 ", deadline=" + deadline +
-                ", employee=" + employee.getName() +
+                ", employeeID=" + employee.getId() +
                 ", status=" + status + "\n";
     }
 

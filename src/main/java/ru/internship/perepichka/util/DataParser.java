@@ -59,7 +59,13 @@ public class DataParser {
         LocalDate deadLine = getDeadLine(exc, lineParts[taskDeadLineIndex], line);
         Task.Status status = getStatus(exc, lineParts, line);
 
-        return new Task(taskId, header, description, deadLine, new Employee(userId, "unknown"), status);
+        return Task.builder()
+                .id(taskId)
+                .header(header)
+                .description(description)
+                .employee(new Employee(userId, "unknown"))
+                .deadline(deadLine)
+                .status(status).build();
     }
 
     public static Task.Status getStatus(Exception exc, String[] lineParts, String line) {

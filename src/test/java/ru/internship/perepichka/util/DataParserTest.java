@@ -10,8 +10,9 @@ import ru.internship.perepichka.exception.DataLoadingException;
 import ru.internship.perepichka.initializer.DataInitializer;
 import ru.internship.perepichka.service.TaskService;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import java.time.LocalDate;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 
 class DataParserTest {
@@ -84,6 +85,26 @@ class DataParserTest {
             String taskLine = "1,header,description,1,25.05.2022";
             Task newTask = DataParser.parseTaskLine(exceptionTypeFromTaskService, taskLine);
             assertEquals(Task.Status.NEW, newTask.getStatus());
+        }
+
+        @Test
+        void successfullyParsing_ReturnTask() {
+            Employee validEmployee = new Employee(1, "unknown");
+            Task expectedTask = Task.builder()
+                    .id(1L)
+                    .header("header")
+                    .description("desc")
+                    .employee(validEmployee)
+                    .deadline(LocalDate.of(2000, 1, 1))
+                    .build();
+            String validTaskLine = "1,header,desc,1,1.01.2000";
+            Task actualTask = DataParser.parseTaskLine(exceptionTypeFromTaskService, validTaskLine);
+            assertSame(expectedTask.getId(), actualTask.getId());
+            assertEquals(expectedTask.getHeader(), actualTask.getHeader());
+            assertEquals(expectedTask.getDescription(), actualTask.getDescription());
+            assertSame(expectedTask.getEmployee().getId(), actualTask.getEmployee().getId());
+            assertEquals(expectedTask.getDeadline(), actualTask.getDeadline());
+            assertEquals(expectedTask.getStatus(), actualTask.getStatus());
         }
     }
 

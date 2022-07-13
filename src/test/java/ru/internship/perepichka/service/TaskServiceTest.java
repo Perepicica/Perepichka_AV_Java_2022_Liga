@@ -26,8 +26,13 @@ class TaskServiceTest {
     private final String defaultInvalidId = "1q";
     private final String defaultTaskLine = "1,header,desc,1,1.01.2000";
     private final Employee defaultEmployee = new Employee(1, "test");
-    private final Task defaultTask = new Task(defaultId, "header", "desc",
-            LocalDate.of(2000, 1, 1), defaultEmployee, Task.Status.NEW);
+    private final Task defaultTask = Task.builder()
+            .id(defaultId)
+            .header("header")
+            .description("desc")
+            .employee(defaultEmployee)
+            .deadline(LocalDate.of(2000, 1, 1))
+            .build();
 
     @BeforeEach
     void setUp() {
