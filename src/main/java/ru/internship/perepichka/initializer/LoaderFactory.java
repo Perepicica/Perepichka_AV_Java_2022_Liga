@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import ru.internship.perepichka.dao.EmployeeRepository;
 import ru.internship.perepichka.dao.TaskRepository;
+import ru.internship.perepichka.types.FileType;
 
 @Component
 @RequiredArgsConstructor

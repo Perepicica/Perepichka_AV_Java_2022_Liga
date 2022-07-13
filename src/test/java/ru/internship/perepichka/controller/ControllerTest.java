@@ -5,8 +5,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import ru.internship.perepichka.exception.BadCommandException;
-import ru.internship.perepichka.service.EmployeeService;
-import ru.internship.perepichka.service.TaskService;
+import ru.internship.perepichka.service.EmployeeServiceFacade;
+import ru.internship.perepichka.service.TaskServiceFacade;
 
 
 class ControllerTest {
@@ -15,9 +15,9 @@ class ControllerTest {
 
     @BeforeEach
     void setUp() {
-        EmployeeService employeeService = Mockito.mock(EmployeeService.class);
-        TaskService taskService = Mockito.mock(TaskService.class);
-        controller = new Controller(employeeService, taskService);
+        EmployeeServiceFacade employeeServiceFacade = Mockito.mock(EmployeeServiceFacade.class);
+        TaskServiceFacade taskServiceFacade = Mockito.mock(TaskServiceFacade.class);
+        controller = new Controller(employeeServiceFacade, taskServiceFacade);
     }
 
     @Test

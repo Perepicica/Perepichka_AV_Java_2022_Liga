@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import ru.internship.perepichka.exception.DataLoadingException;
+import ru.internship.perepichka.types.FileType;
 
 import javax.annotation.PostConstruct;
 import java.io.IOException;

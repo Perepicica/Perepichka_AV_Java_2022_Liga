@@ -4,35 +4,28 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
-import ru.internship.perepichka.exception.BadCommandException;
-import ru.internship.perepichka.service.EmployeeService;
-import ru.internship.perepichka.service.TaskService;
+import ru.internship.perepichka.dto.DataForControllerProcessing;
+import ru.internship.perepichka.service.EmployeeServiceFacade;
+import ru.internship.perepichka.service.TaskServiceFacade;
+import ru.internship.perepichka.util.CommandParser;
 
 
 @RestController
 @RequiredArgsConstructor
 public class Controller {
 
-    private final EmployeeService employeeService;
-    private final TaskService taskService;
+    private final EmployeeServiceFacade employeeServiceFacade;
+    private final TaskServiceFacade taskServiceFacade;
+
 
     @GetMapping("api/{command}")
     public String processCommand(@PathVariable String command) {
-        String[] requestParts = command.split(":");
-        if (requestParts.length != 2) {
-            throw new BadCommandException("Follow the command pattern command:arg1,arg2...");
+        DataForControllerProcessing dataForProc = CommandParser.parseControllerCommand(command);
+
+        if (dataForProc.getClassName() == EmployeeServiceFacade.class) {
+            return employeeServiceFacade.process(dataForProc.getCommand(), dataForProc.getArgs());
+        } else {
+            return taskServiceFacade.process(dataForProc.getCommand(), dataForProc.getArgs());
         }
-
-        String args = requestParts[1];
-        return switch (requestParts[0]) {
-            case "getEmployeeTasks" -> employeeService.getEmployeeTasksString(args);
-            case "addTask" -> taskService.addTask(args);
-            case "getTask" -> taskService.getTaskString(args);
-            case "updateTask" -> taskService.updateTask(args);
-            case "deleteTask" -> taskService.deleteTask(args);
-            case "deleteAll" -> employeeService.deleteUsers();
-            default -> throw new BadCommandException("No such command");
-        };
     }
-
 }
