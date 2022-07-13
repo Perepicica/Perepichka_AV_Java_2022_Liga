@@ -7,7 +7,6 @@ import ru.internship.perepichka.entity.Task;
 import ru.internship.perepichka.exception.BadCommandException;
 import ru.internship.perepichka.exception.BadIdException;
 import ru.internship.perepichka.dto.DataForTaskUpdate;
-import ru.internship.perepichka.util.CommandParser;
 import ru.internship.perepichka.util.DataParser;
 
 import java.util.Optional;
@@ -22,9 +21,7 @@ public class TaskService {
 
     public static final Function<String, BadCommandException> exceptionType = BadCommandException::new;
 
-    public String addTask(String args) {
-        Task task = DataParser.parseTaskLine(exceptionType.apply(""), args);
-
+    public void addTask(Task task) {
         if (taskRepository.existsById(task.getId())) {
             throw new BadIdException("Task with id " + task.getId() + " already exists");
         }
@@ -35,15 +32,9 @@ public class TaskService {
 
         task.setEmployee(employeeService.getReferenceById(task.getEmployee().getId()));
         taskRepository.save(task);
-        return "Task was added successfully";
     }
 
-    public String getTaskString(String args) {
-        return getTask(args).toString();
-    }
-
-    private Task getTask(String args) {
-        long id = DataParser.parseId(exceptionType.apply(""), args);
+    Task getTask(long id) {
         Optional<Task> optionalTask = taskRepository.findById(id);
         if (optionalTask.isPresent()) {
             return optionalTask.get();
@@ -52,8 +43,7 @@ public class TaskService {
         }
     }
 
-    public String updateTask(String args) {
-        DataForTaskUpdate data = CommandParser.parseUpdateCommand(args);
+    public void updateTask(DataForTaskUpdate data) {
         Task task = getTask(data.getTaskId());
 
         switch (data.getFieldName()) {
@@ -69,7 +59,6 @@ public class TaskService {
         }
 
         taskRepository.save(task);
-        return "Task was updated successfully";
     }
 
     public void updateEmployeeId(Task task, String strId) {
@@ -80,12 +69,10 @@ public class TaskService {
         task.setEmployee(employeeService.getReferenceById(employeeId));
     }
 
-    public String deleteTask(String args) {
-        long id = DataParser.parseId(exceptionType.apply(""), args);
+    public void deleteTask(long id) {
         if (!taskRepository.existsById(id)) {
             throw new BadIdException("No task with id " + id);
         }
         taskRepository.deleteById(id);
-        return "Task was deleted successfully";
     }
 }

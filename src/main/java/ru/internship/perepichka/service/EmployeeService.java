@@ -5,9 +5,7 @@ import org.springframework.stereotype.Service;
 import ru.internship.perepichka.dao.EmployeeRepository;
 import ru.internship.perepichka.entity.Employee;
 import ru.internship.perepichka.entity.Task;
-import ru.internship.perepichka.exception.BadCommandException;
 import ru.internship.perepichka.exception.BadIdException;
-import ru.internship.perepichka.util.DataParser;
 
 import java.util.List;
 import java.util.Optional;
@@ -17,18 +15,7 @@ import java.util.Optional;
 public class EmployeeService {
     private final EmployeeRepository employeeRepository;
 
-    public String getEmployeeTasksString(String args) {
-        List<Task> tasks = getEmployeeTasks(args);
-        StringBuilder builder = new StringBuilder();
-
-        for (Task task : tasks) {
-            builder.append(task.toString());
-        }
-        return builder.toString();
-    }
-
-    private List<Task> getEmployeeTasks(String args) {
-        long id = DataParser.parseId(new BadCommandException(""), args);
+    List<Task> getEmployeeTasks(long id) {
         Optional<Employee> optionalEmployee = employeeRepository.findById(id);
 
         if (optionalEmployee.isPresent()) {
@@ -38,9 +25,8 @@ public class EmployeeService {
         }
     }
 
-    public String deleteUsers() {
+    public void deleteUsers() {
         employeeRepository.deleteAll();
-        return "All data was deleted successfully";
     }
 
     public Employee getReferenceById(long id) {

@@ -2,7 +2,12 @@ package ru.internship.perepichka.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
+import ru.internship.perepichka.entity.Task;
+import ru.internship.perepichka.exception.BadCommandException;
 import ru.internship.perepichka.types.EmployeeServiceCommandType;
+import ru.internship.perepichka.util.DataParser;
+
+import java.util.List;
 
 @Component
 @RequiredArgsConstructor
@@ -14,8 +19,25 @@ public class EmployeeServiceFacade implements ServiceFacade {
     public String process(String commandStr, String args) {
         EmployeeServiceCommandType command = EmployeeServiceCommandType.typeByUserCommand(commandStr);
         return switch (command) {
-            case GET_EMPLOYEE_TASKS -> employeeService.getEmployeeTasksString(args);
-            case DELETE_ALL -> employeeService.deleteUsers();
+            case GET_EMPLOYEE_TASKS -> getEmployeeTasks(args);
+            case DELETE_ALL -> deleteAll();
         };
+    }
+
+    private String getEmployeeTasks(String args) {
+        long id = DataParser.parseId(new BadCommandException(""), args);
+        List<Task> tasks = employeeService.getEmployeeTasks(id);
+
+        StringBuilder builder = new StringBuilder();
+        for (Task task : tasks) {
+            builder.append(task.toString());
+        }
+
+        return builder.toString();
+    }
+
+    private String deleteAll() {
+        employeeService.deleteUsers();
+        return "All data was deleted successfully";
     }
 }

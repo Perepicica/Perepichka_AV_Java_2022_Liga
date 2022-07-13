@@ -20,6 +20,7 @@ public class CommandParser {
     private final String commandAndArgsDelimiter = ":";
 
     private final int splitPartsCount = 2;
+
     private final int taskId = 0;
     private final int infoToUpdate = 1;
     private final int fieldName = 0;
@@ -30,17 +31,22 @@ public class CommandParser {
 
     public static DataForTaskUpdate parseUpdateCommand(String args) {
         DataForTaskUpdate data = new DataForTaskUpdate();
+
         String[] idAndField = args.split(idAndUpdateArgDelimiter);
         if (idAndField.length != splitPartsCount) {
             throw new BadCommandException(UPDATE_COMMAND_ERROR);
         }
-        data.setTaskId(idAndField[taskId]);
+        long parsedTaskId = DataParser.parseId(new BadCommandException(""),idAndField[taskId]);
+        data.setTaskId(parsedTaskId);
+
         String[] updateArg = idAndField[infoToUpdate].split(fieldAndValueDelimiter);
         if (updateArg.length != splitPartsCount) {
             throw new BadCommandException(UPDATE_COMMAND_ERROR);
         }
+
         data.setFieldName(updateArg[fieldName]);
         data.setNewValue(updateArg[newValue]);
+
         return data;
     }
 

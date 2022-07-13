@@ -9,7 +9,7 @@ import lombok.Setter;
 @NoArgsConstructor
 public class DataForTaskUpdate {
 
-    private String taskId;
+    private long taskId;
     private String fieldName;
     private String newValue;
 
