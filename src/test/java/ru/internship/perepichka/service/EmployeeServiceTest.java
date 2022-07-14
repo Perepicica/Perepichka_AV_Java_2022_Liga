@@ -25,19 +25,13 @@ class EmployeeServiceTest {
 
     @Nested
     @DisplayName("Testing getEmployeeTasks method")
-    class getEmployeeTasksStringTest {
-
-        @Test
-        void invalidId_ExceptionThrown() {
-            String invalidId = "1q";
-            Assertions.assertThrows(BadIdException.class, () -> employeeService.getEmployeeTasksString(invalidId));
-        }
+    class getEmployeeTasksTest {
 
         @Test
         void nonExistentEmployee_ExceptionThrown() {
-            String id = "1";
-            Mockito.when(employeeRepository.findById(Long.parseLong(id))).thenReturn(Optional.empty());
-            Assertions.assertThrows(BadIdException.class, () -> employeeService.getEmployeeTasksString(id));
+            long id = 1;
+            Mockito.when(employeeRepository.findById(id)).thenReturn(Optional.empty());
+            Assertions.assertThrows(BadIdException.class, () -> employeeService.getEmployeeTasks(id));
         }
 
         @Test
@@ -45,12 +39,7 @@ class EmployeeServiceTest {
             Employee employee = getEmployeeWithTasks();
             Mockito.when(employeeRepository.findById(employee.getId())).thenReturn(Optional.of(employee));
 
-            String expected = "";
-            for (Task task : employee.getTasks()) {
-                expected += task.toString();
-            }
-
-            Assertions.assertEquals(expected, employeeService.getEmployeeTasksString(employee.getId().toString()));
+            Assertions.assertEquals(employee.getTasks(), employeeService.getEmployeeTasks(employee.getId()));
         }
 
         Employee getEmployeeWithTasks() throws NoSuchFieldException, IllegalAccessException {
@@ -65,12 +54,5 @@ class EmployeeServiceTest {
 
             return employee;
         }
-    }
-
-    @Test
-    @DisplayName("Testing deleteAll method")
-    void deleteAll_ConfirmationReturn() {
-        String confirmation = "All data was deleted successfully";
-        Assertions.assertEquals(confirmation, employeeService.deleteUsers());
     }
 }

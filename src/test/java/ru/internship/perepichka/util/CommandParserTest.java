@@ -1,6 +1,8 @@
 package ru.internship.perepichka.util;
 
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
@@ -25,9 +27,25 @@ class CommandParserTest {
     @Test
     void parseUpdateCommand_SuccessfulParse() {
         DataForTaskUpdate data = CommandParser.parseUpdateCommand("1,header=newHeader");
-        Assertions.assertEquals("1", data.getTaskId());
+        Assertions.assertEquals(1, data.getTaskId());
         Assertions.assertEquals("header", data.getFieldName());
         Assertions.assertEquals("newHeader", data.getNewValue());
+    }
+
+    @Nested
+    @DisplayName("Controller command parser testing")
+    class parseControllerCommandTest{
+        @Test
+        void processCommand_TooFewCommandArgs_ExceptionThrown() {
+            Assertions.assertThrows(BadCommandException.class,
+                    () -> CommandParser.parseControllerCommand("getEmployeeTasks:"));
+        }
+
+        @Test
+        void processCommand_WrongCommandArg_ExceptionThrown() {
+            Assertions.assertThrows(BadCommandException.class,
+                    () -> CommandParser.parseUpdateCommand("getEmployeeName:1"));
+        }
     }
 
 }
