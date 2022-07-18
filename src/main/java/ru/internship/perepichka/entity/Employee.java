@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.NoArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -22,9 +24,9 @@ public class Employee {
     private String name;
 
     @OneToMany(mappedBy = "employee",
-            cascade = CascadeType.ALL,
-            fetch = FetchType.LAZY)
+            cascade = CascadeType.ALL)
     @JsonManagedReference
+    @Fetch(FetchMode.JOIN)
     private List<Task> tasks;
 
     public Employee(long id, String name){
