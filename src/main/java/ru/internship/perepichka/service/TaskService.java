@@ -10,7 +10,6 @@ import ru.internship.perepichka.dto.DataForTaskUpdate;
 import ru.internship.perepichka.util.DataParser;
 
 import java.util.Optional;
-import java.util.function.Function;
 
 @Service
 @RequiredArgsConstructor
@@ -19,12 +18,7 @@ public class TaskService {
     private final TaskRepository taskRepository;
     private final EmployeeService employeeService;
 
-    public static final Function<String, BadCommandException> exceptionType = BadCommandException::new;
-
     public void addTask(Task task) {
-        if (taskRepository.existsById(task.getId())) {
-            throw new BadIdException("Task with id " + task.getId() + " already exists");
-        }
 
         if (!employeeService.existsById(task.getEmployee().getId())) {
             throw new BadIdException("No user with id " + task.getEmployee().getId());
@@ -34,7 +28,7 @@ public class TaskService {
         taskRepository.save(task);
     }
 
-    Task getTask(long id) {
+    Task getTask(String id) {
         Optional<Task> optionalTask = taskRepository.findById(id);
         if (optionalTask.isPresent()) {
             return optionalTask.get();
@@ -51,25 +45,24 @@ public class TaskService {
             case "description" -> task.setDescription(data.getNewValue());
             case "employeeId" -> updateEmployeeId(task, data.getNewValue());
             case "deadLine" ->
-                    task.setDeadline(DataParser.getDeadLine(exceptionType.apply(""), data.getNewValue(), ""));
+                    task.setDeadline(DataParser.getDeadLine(data.getNewValue()));
             case "status" ->
-                    task.setStatus(DataParser.getStatusType(exceptionType.apply(""), data.getNewValue(), ""));
+                    task.setStatus(DataParser.getStatusType(data.getNewValue()));
             default ->
-                    throw exceptionType.apply("Wrong field name, options for update: header, description,employeeId,deadLine, status");
+                    throw new BadCommandException("Wrong field name, options for update: header, description,employeeId,deadLine, status");
         }
 
         taskRepository.save(task);
     }
 
-    public void updateEmployeeId(Task task, String strId) {
-        long employeeId = DataParser.parseId(exceptionType.apply(""), strId);
+    public void updateEmployeeId(Task task, String employeeId) {
         if (!employeeService.existsById(employeeId)) {
             throw new BadIdException("No user with id " + employeeId);
         }
         task.setEmployee(employeeService.getReferenceById(employeeId));
     }
 
-    public void deleteTask(long id) {
+    public void deleteTask(String id) {
         if (!taskRepository.existsById(id)) {
             throw new BadIdException("No task with id " + id);
         }

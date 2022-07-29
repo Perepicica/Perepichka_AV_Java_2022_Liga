@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
+import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -19,7 +20,10 @@ import java.util.List;
 public class Employee {
 
     @Id
-    private Long id;
+    @GeneratedValue(generator = "system-uuid")
+    @GenericGenerator(name = "system-uuid", strategy = "uuid2")
+    @Column(name = "id", columnDefinition = "varchar")
+    private String id;
 
     private String name;
 
@@ -29,7 +33,12 @@ public class Employee {
     @Fetch(FetchMode.JOIN)
     private List<Task> tasks;
 
-    public Employee(long id, String name){
+    public Employee(String name){
+        this.name = name;
+        this.tasks = new ArrayList<>();
+    }
+
+    public Employee(String id, String name){
         this.id = id;
         this.name = name;
         this.tasks = new ArrayList<>();

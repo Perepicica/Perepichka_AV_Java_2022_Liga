@@ -11,7 +11,7 @@ import lombok.Setter;
 @AllArgsConstructor
 public class DataForTaskUpdate {
 
-    private long taskId;
+    private String taskId;
     private String fieldName;
     private String newValue;
 

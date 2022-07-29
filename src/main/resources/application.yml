@@ -1,19 +1,15 @@
 spring:
-  h2:
-    console:
-      enabled: true
   datasource:
-    url: jdbc:h2:mem:testdb
-    driver-class-name: org.h2.Driver
-    username: sa
-    password:
+    url: jdbc:postgresql://localhost:5432/mydb
+    username: admin
+    password: admin
   jpa:
     show-sql: true
     hibernate:
       ddl-auto: update
     properties:
       hibernate:
-        dialect: org.hibernate.dialect.H2Dialect
-file:
-  employees: src/main/resources/employeeData.csv
-  tasks: src/main/resources/taskData.csv
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        default_schema: db_main
+  flyway:
+    default-schema: db_main

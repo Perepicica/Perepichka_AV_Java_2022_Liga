@@ -26,13 +26,12 @@ public class TaskServiceFacade implements ServiceFacade {
     }
 
     private String addTask(String args) {
-        Task task = DataParser.parseTaskLine(TaskService.exceptionType.apply(""), args);
+        Task task = DataParser.parseTaskLine(args);
         taskService.addTask(task);
         return "Task was added successfully";
     }
 
-    private String getTask(String args) {
-        long id = DataParser.parseId(TaskService.exceptionType.apply(""), args);
+    private String getTask(String id) {
         return taskService.getTask(id).toString();
     }
 
@@ -42,8 +41,7 @@ public class TaskServiceFacade implements ServiceFacade {
         return "Task was updated successfully";
     }
 
-    private String deleteTask(String args){
-        long id = DataParser.parseId(TaskService.exceptionType.apply(""), args);
+    private String deleteTask(String id){
         taskService.deleteTask(id);
         return "Task was deleted successfully";
     }

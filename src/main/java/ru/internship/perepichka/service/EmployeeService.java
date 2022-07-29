@@ -15,7 +15,7 @@ import java.util.Optional;
 public class EmployeeService {
     private final EmployeeRepository employeeRepository;
 
-    List<Task> getEmployeeTasks(long id) {
+    List<Task> getEmployeeTasks(String id) {
         Optional<Employee> optionalEmployee = employeeRepository.findById(id);
 
         if (optionalEmployee.isPresent()) {
@@ -29,11 +29,11 @@ public class EmployeeService {
         employeeRepository.deleteAll();
     }
 
-    public Employee getReferenceById(long id) {
+    public Employee getReferenceById(String id) {
         return employeeRepository.getReferenceById(id);
     }
 
-    public boolean existsById(long id) {
+    public boolean existsById(String id) {
         return employeeRepository.existsById(id);
     }
 

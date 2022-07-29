@@ -2,24 +2,32 @@ package ru.internship.perepichka.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.*;
+import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 import java.time.LocalDate;
 
-@Builder
 @Entity
 @NoArgsConstructor
-@AllArgsConstructor
 @Getter
 @Setter
 @Table(name = "task")
 public class Task {
 
-    @Id
-    @NonNull
-    private Long id;
+    public Task(String header, String description, LocalDate deadline, Employee employee, Status status) {
+        this.header = header;
+        this.description = description;
+        this.deadline = deadline;
+        this.employee = employee;
+        this.status = status;
+    }
 
-    @NonNull
+    @Id
+    @GeneratedValue(generator = "system-uuid")
+    @GenericGenerator(name = "system-uuid", strategy = "uuid2")
+    @Column(name = "id", columnDefinition = "varchar")
+    private String id;
+
     private String header;
 
     private String description;
@@ -32,9 +40,8 @@ public class Task {
     @JsonBackReference
     private Employee employee;
 
-    @Builder.Default
     @Enumerated(EnumType.STRING)
-    private Status status = Status.NEW;
+    private Status status;
 
     @Override
     public String toString() {
