@@ -36,8 +36,7 @@ public class CommandParser {
         if (idAndField.length != splitPartsCount) {
             throw new BadCommandException(UPDATE_COMMAND_ERROR);
         }
-        long parsedTaskId = DataParser.parseId(new BadCommandException(""),idAndField[taskId]);
-        data.setTaskId(parsedTaskId);
+        data.setTaskId(idAndField[taskId]);
 
         String[] updateArg = idAndField[infoToUpdate].split(fieldAndValueDelimiter);
         if (updateArg.length != splitPartsCount) {

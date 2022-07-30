@@ -3,19 +3,20 @@ package ru.internship.perepichka.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.internship.perepichka.dao.EmployeeRepository;
+import ru.internship.perepichka.dto.TaskFilters;
 import ru.internship.perepichka.entity.Employee;
 import ru.internship.perepichka.entity.Task;
 import ru.internship.perepichka.exception.BadIdException;
+import ru.internship.perepichka.specification.EmployeeSpecification;
 
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @RequiredArgsConstructor
 @Service
 public class EmployeeService {
     private final EmployeeRepository employeeRepository;
 
-    List<Task> getEmployeeTasks(long id) {
+    List<Task> getEmployeeTasks(String id) {
         Optional<Employee> optionalEmployee = employeeRepository.findById(id);
 
         if (optionalEmployee.isPresent()) {
@@ -29,12 +30,21 @@ public class EmployeeService {
         employeeRepository.deleteAll();
     }
 
-    public Employee getReferenceById(long id) {
+    public Employee getReferenceById(String id) {
         return employeeRepository.getReferenceById(id);
     }
 
-    public boolean existsById(long id) {
+    public boolean existsById(String id) {
         return employeeRepository.existsById(id);
+    }
+
+    public String getEmployeeWithMaxTasks(TaskFilters filters){
+        List<Employee> employees = employeeRepository.findAll(EmployeeSpecification.getEmployeesWithFilteredTasks(filters));
+        Map<String,Integer> counts = new HashMap<>();
+        for(Employee employee : employees ) {
+            counts.merge(employee.getId(), 1, Integer::sum);
+        }
+        return Collections.max(counts.entrySet(), Comparator.comparingInt(Map.Entry::getValue)).getKey();
     }
 
 }

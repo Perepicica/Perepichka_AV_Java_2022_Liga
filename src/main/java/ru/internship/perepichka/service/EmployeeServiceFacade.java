@@ -2,10 +2,9 @@ package ru.internship.perepichka.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
+import ru.internship.perepichka.dto.TaskFilters;
 import ru.internship.perepichka.entity.Task;
-import ru.internship.perepichka.exception.BadCommandException;
 import ru.internship.perepichka.types.EmployeeServiceCommandType;
-import ru.internship.perepichka.util.DataParser;
 
 import java.util.List;
 
@@ -24,8 +23,7 @@ public class EmployeeServiceFacade implements ServiceFacade {
         };
     }
 
-    private String getEmployeeTasks(String args) {
-        long id = DataParser.parseId(new BadCommandException(""), args);
+    private String getEmployeeTasks(String id) {
         List<Task> tasks = employeeService.getEmployeeTasks(id);
 
         StringBuilder builder = new StringBuilder();
@@ -39,5 +37,8 @@ public class EmployeeServiceFacade implements ServiceFacade {
     private String deleteAll() {
         employeeService.deleteUsers();
         return "All data was deleted successfully";
+    }
+    public String getEmployeeWithMaxTasks(TaskFilters filters){
+         return employeeService.getEmployeeWithMaxTasks(filters);
     }
 }
