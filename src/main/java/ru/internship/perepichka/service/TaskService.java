@@ -2,6 +2,7 @@ package ru.internship.perepichka.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.internship.perepichka.dao.TaskRepository;
 import ru.internship.perepichka.entity.Task;
 import ru.internship.perepichka.exception.BadCommandException;
@@ -11,8 +12,9 @@ import ru.internship.perepichka.util.DataParser;
 
 import java.util.Optional;
 
-@Service
 @RequiredArgsConstructor
+@Service
+@Transactional
 public class TaskService {
 
     private final TaskRepository taskRepository;

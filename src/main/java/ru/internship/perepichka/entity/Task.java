@@ -28,18 +28,22 @@ public class Task {
     @Column(name = "id", columnDefinition = "varchar")
     private String id;
 
+    @Column(name = "header")
     private String header;
 
+    @Column(name = "description")
     private String description;
 
-    @Column(columnDefinition = "Date")
+    @Column(name = "deadline", columnDefinition = "Date")
     private LocalDate deadline;
 
     @ManyToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
     @JoinColumn(name = "employee_id", nullable = false)
     @JsonBackReference
+    @Column(name = "employee_id")
     private Employee employee;
 
+    @Column(name = "status")
     @Enumerated(EnumType.STRING)
     private Status status;
 
