@@ -2,6 +2,7 @@ package ru.internship.perepichka.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.internship.perepichka.dao.EmployeeRepository;
 import ru.internship.perepichka.dto.TaskFilters;
 import ru.internship.perepichka.entity.Employee;
@@ -13,6 +14,7 @@ import java.util.*;
 
 @RequiredArgsConstructor
 @Service
+@Transactional
 public class EmployeeService {
     private final EmployeeRepository employeeRepository;
 

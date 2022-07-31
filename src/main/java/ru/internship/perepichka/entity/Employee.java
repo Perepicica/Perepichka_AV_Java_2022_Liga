@@ -25,6 +25,7 @@ public class Employee {
     @Column(name = "id", columnDefinition = "varchar")
     private String id;
 
+    @Column(name = "name")
     private String name;
 
     @OneToMany(mappedBy = "employee",
