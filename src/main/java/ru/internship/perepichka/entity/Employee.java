@@ -9,8 +9,8 @@ import org.hibernate.annotations.FetchMode;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -28,21 +28,25 @@ public class Employee {
     @Column(name = "name")
     private String name;
 
+    @Column(name = "email")
+    private String email;
+
+    @Column(name = "password")
+    private String password;
+
     @OneToMany(mappedBy = "employee",
-            cascade = CascadeType.ALL)
+            cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
     @JsonManagedReference
     @Fetch(FetchMode.JOIN)
-    private List<Task> tasks;
+    private Set<Comment> comments = new HashSet<>();
 
-    public Employee(String name){
-        this.name = name;
-        this.tasks = new ArrayList<>();
-    }
+    @OneToMany(mappedBy = "employee",
+            cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
+    @JsonManagedReference
+    @Fetch(FetchMode.JOIN)
+    private Set<Task> tasks = new HashSet<>();
 
-    public Employee(String id, String name){
-        this.id = id;
-        this.name = name;
-        this.tasks = new ArrayList<>();
-    }
-
+    @ManyToMany(mappedBy = "employees")
+    @JsonManagedReference
+    private Set<Project> projects = new HashSet<>();
 }
