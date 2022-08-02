@@ -36,9 +36,9 @@ public class EmployeeServiceImpl implements EmployeeService {
     public Employee updateEmployee(String id, Employee newEmployee) {
         return repository.findById(id)
                 .map(employee -> {
-                    if (newEmployee.getName() != null) employee.setName(newEmployee.getName());
-                    if (newEmployee.getEmail() != null) employee.setEmail(newEmployee.getEmail());
-                    if (newEmployee.getPassword() != null) employee.setPassword(newEmployee.getPassword());
+                    employee.setName(newEmployee.getName());
+                    employee.setEmail(newEmployee.getEmail());
+                    employee.setPassword(newEmployee.getPassword());
                     return repository.save(employee);
                 })
                 .orElseThrow(() -> new BadIdException("Employee with such id: " + id + "not found"));

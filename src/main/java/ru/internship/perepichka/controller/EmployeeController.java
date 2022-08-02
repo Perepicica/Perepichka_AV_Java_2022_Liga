@@ -5,10 +5,12 @@ import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ru.internship.perepichka.dto.EmployeeDTO;
+import ru.internship.perepichka.dto.PostPutEmployeeDTO;
+import ru.internship.perepichka.dto.GetEmployeeDTO;
 import ru.internship.perepichka.entity.Employee;
 import ru.internship.perepichka.service.implementation.EmployeeServiceImpl;
 
+import javax.validation.Valid;
 import java.util.List;
 import java.util.Optional;
 
@@ -23,10 +25,10 @@ public class EmployeeController {
     private final ModelMapper modelMapper;
 
     @GetMapping
-    public ResponseEntity<List<EmployeeDTO>> getAllEmployees() {
-        List<EmployeeDTO> employees = employeeServiceImpl.getAllEmployees()
+    public ResponseEntity<List<GetEmployeeDTO>> getAllEmployees() {
+        List<GetEmployeeDTO> employees = employeeServiceImpl.getAllEmployees()
                 .stream()
-                .map(employee -> modelMapper.map(employee, EmployeeDTO.class))
+                .map(employee -> modelMapper.map(employee, GetEmployeeDTO.class))
                 .toList();
         if (employees.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
@@ -35,10 +37,10 @@ public class EmployeeController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<EmployeeDTO> getEmployeeById(@PathVariable(name = "id") String id) {
+    public ResponseEntity<GetEmployeeDTO> getEmployeeById(@PathVariable(name = "id") String id) {
         Optional<Employee> employee = employeeServiceImpl.getEmployeeById(id);
         if (employee.isPresent()) {
-            EmployeeDTO employeeResponse = modelMapper.map(employee.get(), EmployeeDTO.class);
+            GetEmployeeDTO employeeResponse = modelMapper.map(employee.get(), GetEmployeeDTO.class);
             return new ResponseEntity<>(employeeResponse, HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -46,11 +48,11 @@ public class EmployeeController {
     }
 
     @PostMapping
-    public ResponseEntity<EmployeeDTO> createEmployee(@RequestBody EmployeeDTO employeeDTO) {
+    public ResponseEntity<PostPutEmployeeDTO> createEmployee(@Valid @RequestBody PostPutEmployeeDTO employeeDTO) {
         try {
             Employee employeeRequest = modelMapper.map(employeeDTO, Employee.class);
             Employee employee = employeeServiceImpl.createEmployee(employeeRequest);
-            EmployeeDTO employeeResponse = modelMapper.map(employee, EmployeeDTO.class);
+            PostPutEmployeeDTO employeeResponse = modelMapper.map(employee, PostPutEmployeeDTO.class);
             return new ResponseEntity<>(employeeResponse, HttpStatus.CREATED);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
@@ -58,10 +60,11 @@ public class EmployeeController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<EmployeeDTO> updateEmployee(@PathVariable(name = "id") String id, @RequestBody EmployeeDTO employeeDTO) {
+    public ResponseEntity<PostPutEmployeeDTO> updateEmployee(@PathVariable(name = "id") String id,
+                                                             @Valid @RequestBody PostPutEmployeeDTO employeeDTO) {
         Employee employeeRequest = modelMapper.map(employeeDTO, Employee.class);
         Employee employee = employeeServiceImpl.updateEmployee(id, employeeRequest);
-        EmployeeDTO employeeResponse = modelMapper.map(employee, EmployeeDTO.class);
+        PostPutEmployeeDTO employeeResponse = modelMapper.map(employee, PostPutEmployeeDTO.class);
         return ResponseEntity.ok().body(employeeResponse);
     }
 
