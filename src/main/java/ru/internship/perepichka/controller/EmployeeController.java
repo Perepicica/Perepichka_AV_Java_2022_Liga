@@ -48,11 +48,11 @@ public class EmployeeController {
     }
 
     @PostMapping
-    public ResponseEntity<PostPutEmployeeDTO> createEmployee(@Valid @RequestBody PostPutEmployeeDTO employeeDTO) {
+    public ResponseEntity<GetEmployeeDTO> createEmployee(@Valid @RequestBody PostPutEmployeeDTO employeeDTO) {
         try {
             Employee employeeRequest = modelMapper.map(employeeDTO, Employee.class);
             Employee employee = employeeServiceImpl.createEmployee(employeeRequest);
-            PostPutEmployeeDTO employeeResponse = modelMapper.map(employee, PostPutEmployeeDTO.class);
+            GetEmployeeDTO employeeResponse = modelMapper.map(employee, GetEmployeeDTO.class);
             return new ResponseEntity<>(employeeResponse, HttpStatus.CREATED);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);

@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.internship.perepichka.dao.TaskRepository;
+import ru.internship.perepichka.entity.Employee;
 import ru.internship.perepichka.entity.Task;
 import ru.internship.perepichka.exception.BadIdException;
 import ru.internship.perepichka.service.TaskService;
@@ -17,6 +18,7 @@ import java.util.Optional;
 public class TaskServiceImpl implements TaskService {
 
     private final TaskRepository repository;
+    private final EmployeeServiceImpl employeeServiceImpl;
 
     @Override
     public List<Task> getAllTasks() {
@@ -49,6 +51,11 @@ public class TaskServiceImpl implements TaskService {
 
     @Override
     public void deleteTask(String id) {
+        Optional<Task> optTask = getTaskById(id);
+        if (optTask.isPresent()) {
+            Employee employee = optTask.get().getEmployee();
+            employee.getTasks().removeIf(task -> task.getId().equals(id));
+        }
         repository.deleteById(id);
     }
 }
