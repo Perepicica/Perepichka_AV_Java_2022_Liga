@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import ru.internship.perepichka.dto.PostPutEmployeeDTO;
 import ru.internship.perepichka.dto.GetEmployeeDTO;
 import ru.internship.perepichka.entity.Employee;
+import ru.internship.perepichka.exception.HasReferenceException;
 import ru.internship.perepichka.service.implementation.EmployeeServiceImpl;
 
 import javax.validation.Valid;
@@ -69,10 +70,12 @@ public class EmployeeController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<HttpStatus> deleteEmployee(@PathVariable(name = "id") String id) {
+    public ResponseEntity<String> deleteEmployee(@PathVariable(name = "id") String id) {
         try {
             employeeServiceImpl.deleteEmployee(id);
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        } catch (HasReferenceException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }

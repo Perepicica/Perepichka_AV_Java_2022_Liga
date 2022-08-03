@@ -3,6 +3,7 @@ package ru.internship.perepichka.service.implementation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.Assert;
 import ru.internship.perepichka.dao.TaskRepository;
 import ru.internship.perepichka.entity.Employee;
 import ru.internship.perepichka.entity.Task;
@@ -18,7 +19,6 @@ import java.util.Optional;
 public class TaskServiceImpl implements TaskService {
 
     private final TaskRepository repository;
-    private final EmployeeServiceImpl employeeServiceImpl;
 
     @Override
     public List<Task> getAllTasks() {
@@ -57,5 +57,16 @@ public class TaskServiceImpl implements TaskService {
             employee.getTasks().removeIf(task -> task.getId().equals(id));
         }
         repository.deleteById(id);
+    }
+
+    public Long getCountTasksByEmployeeId(String employeeId){
+        Assert.notNull(employeeId, "The given id must not be null!");
+        return repository
+                .findAll()
+                .stream()
+                .filter(task -> {
+                    return task.getEmployee().getId().equals(employeeId);
+                })
+                .count();
     }
 }

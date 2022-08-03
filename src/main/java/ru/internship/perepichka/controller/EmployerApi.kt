@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.*
 import ru.internship.perepichka.dto.GetEmployeeDTO
 import ru.internship.perepichka.dto.PostPutEmployeeDTO
 import ru.internship.perepichka.exception.BadIdException
+import ru.internship.perepichka.exception.HasReferenceException
 import ru.internship.perepichka.service.implementation.EmployeeServiceImpl
 import javax.validation.Valid
 import kotlin.jvm.optionals.getOrNull
@@ -48,16 +49,18 @@ class EmployeesApi(
         return try {
             employeeServiceImpl.updateEmployee(id, request.asEmployee)
             ResponseEntity.ok().body(request)
-        } catch (e: BadIdException){
+        } catch (e: BadIdException) {
             ResponseEntity(HttpStatus.NOT_FOUND)
         }
     }
 
     @DeleteMapping("/{id}")
-    fun deleteEmployee(@PathVariable(name = "id") id: String?): ResponseEntity<HttpStatus?>? {
+    fun deleteEmployee(@PathVariable(name = "id") id: String): ResponseEntity<String> {
         return try {
             employeeServiceImpl.deleteEmployee(id)
             ResponseEntity(HttpStatus.OK)
+        } catch (e: HasReferenceException) {
+            ResponseEntity(e.message, HttpStatus.UNPROCESSABLE_ENTITY)
         } catch (e: Exception) {
             ResponseEntity(HttpStatus.NOT_FOUND)
         }
