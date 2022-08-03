@@ -7,6 +7,7 @@ import lombok.Setter;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 import org.hibernate.annotations.GenericGenerator;
+import ru.internship.perepichka.dto.GetEmployeeDTO;
 
 import javax.persistence.*;
 import java.util.HashSet;
@@ -49,4 +50,12 @@ public class Employee {
     @ManyToMany(mappedBy = "employees")
     @JsonManagedReference
     private Set<Project> projects = new HashSet<>();
+
+    public GetEmployeeDTO getAsGetEmployeeDTO(){
+        GetEmployeeDTO result = new GetEmployeeDTO();
+        result.setId(id);
+        result.setName(name);
+        result.setEmail(email);
+        return result;
+    }
 }
