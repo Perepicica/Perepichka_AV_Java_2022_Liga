@@ -6,6 +6,7 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.internship.perepichka.dao.EmployeeRepository;
 import ru.internship.perepichka.entity.Employee;
 import ru.internship.perepichka.exception.BadIdException;
+import ru.internship.perepichka.exception.HasReferenceException;
 import ru.internship.perepichka.service.EmployeeService;
 
 import java.util.*;
@@ -16,6 +17,8 @@ import java.util.*;
 public class EmployeeServiceImpl implements EmployeeService {
 
     private final EmployeeRepository repository;
+
+    private final TaskServiceImpl taskService;
 
     @Override
     public List<Employee> getAllEmployees() {
@@ -46,6 +49,8 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     @Override
     public void deleteEmployee(String id) {
+        if (taskService.getCountTasksByEmployeeId(id) != 0)
+            throw new HasReferenceException("Employee with such id: " + id + " has tasks");
         repository.deleteById(id);
     }
 
