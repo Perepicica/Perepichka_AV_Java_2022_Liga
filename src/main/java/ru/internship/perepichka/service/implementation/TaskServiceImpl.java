@@ -39,12 +39,12 @@ public class TaskServiceImpl implements TaskService {
     public Task updateTask(String id, Task newTask) {
         return repository.findById(id)
                 .map(task -> {
-                    if (newTask.getHeader() != null) task.setHeader(newTask.getHeader());
-                    if (newTask.getDescription() != null) task.setDescription(newTask.getDescription());
-                    if (newTask.getStatus() != null) task.setStatus(newTask.getStatus());
-                    if (newTask.getDeadline() != null) task.setDeadline(newTask.getDeadline());
-                    if (newTask.getEmployee() != null) task.setEmployee(newTask.getEmployee());
-                    if (newTask.getProject() != null) task.setProject(newTask.getProject());
+                    task.setHeader(newTask.getHeader());
+                    task.setDescription(newTask.getDescription());
+                    task.setStatus(newTask.getStatus());
+                    task.setDeadline(newTask.getDeadline());
+                    task.setEmployee(newTask.getEmployee());
+                    task.setProject(newTask.getProject());
                     return repository.save(task);
                 }).orElseThrow(() -> new BadIdException("Task with such id: " + id + "not found"));
     }
